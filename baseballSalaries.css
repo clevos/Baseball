@@ -1,0 +1,62 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: red;
+ }
+
+body{
+    background-color: lightblue;
+    text-align: center;
+    margin: 2em;
+    background-image: url('yankeesStaduim.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+header{
+    margin:50px;
+    font-size: 50px;
+}
+
+footer{
+    text-align: left;
+    font-size: 24px;
+    background-color: black;
+    opacity: 70%;
+    color: white;
+    width:fit-content;
+    position: absolute;
+    left:10px;
+    bottom:50px;
+}
+
+.x1{
+    /* border-style: double; */
+    display: inline;
+    font-family: Arial, Helvetica, sans-serif;    
+    align-items: center; /* aligns vertically */
+    justify-content: center; /* aligns horizontally */
+    font-size: 24px;
+    color:white;
+    background-color: black;
+    opacity: 70%;
+}
+
+.controls {
+    align-items: center;
+}
+main{
+    display: inline;
+}
+button{
+    font-size: 30px;
+}
+
+.forms{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content:flex-start;
+}
