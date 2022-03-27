@@ -1,0 +1,26 @@
+{
+  "name": "baseball-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clevos/Baseball.git"
+  },
+  "author": "Charles Levos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clevos/Baseball/issues"
+  },
+  "homepage": "https://github.com/clevos/Baseball#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3",
+    "path": "^0.12.7",
+    "pug": "^3.0.2"
+  }
+}
