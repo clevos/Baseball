@@ -1,0 +1,12 @@
+html
+	head
+		title='Average Team Salaries Per Year'
+		style
+			include ../public/baseballSalaries.css
+	body
+		h1='Average Team Salaries Per Year'
+
+	select(onchange="window.location.href='/averageTeamSalariesPerYear?yearID='+this.value")
+		option(value=0) # Select a Year
+		each year in years
+			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
