@@ -37,9 +37,13 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
             await connection.beginTransaction()
             let results = await connection.query('Select distinct yearID From salaries order By yearID')
             const years = results[0]
-
+            let salaries 
+            if(yearID && +yearID>0){
+                 results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From salaries Where yearID = ${yearID} group by teamID order by total_sal desc`)  
+                 salaries = results[0]
+                }
             res.render('averageTeamSalariesPerYear',{
-                "yearID": yearID, "years": years
+                "yearID": yearID, "years": years,"salaries": salaries
             })
         } catch (error) {
             console.log(error)

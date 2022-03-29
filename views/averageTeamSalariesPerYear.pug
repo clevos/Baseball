@@ -10,3 +10,18 @@ html
 		option(value=0) # Select a Year
 		each year in years
 			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
+
+	if salaries 
+		table 
+			thead 
+				tr 
+					th Team ID 
+					th Total PayRoll 
+					th Average Salary
+			tbody 
+				each salary in salaries 
+					tr 
+						td #{salary.teamID}
+						td(align="right") #{salary.total_sal.toLocaleString('en-US',{style: 'currency',currency: 'USD'})}
+						td(align="right") #{salary.avg_sal.toLocaleString('en-US' ,{style: 'currency' ,currency: 'USD'})}
+						
