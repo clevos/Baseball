@@ -54,4 +54,31 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
     })().catch(err => console.error(err.stack))
 })
 
+router.get('/teamPayrollPerWinPerYear', (req, res) => {
+    let yearID
+    if(req.query['yearID']){
+        yearID =req.query['yearID']
+    }
+    ;(async()=>{
+        const connection =await getMySQLConnection()
+        try {
+            await connection.beginTransaction()
+            let results = await connection.query('Select distinct yearID From salaries order By yearID')
+            const years = results[0]
+            let salaries 
+            if(yearID && +yearID>0){
+                 results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from salaries join team using(teamID,yearID) where salaries.yearID= ${yearID} group by salaries.teamID, won order by cost_per_win desc`)  
+                 salaries = results[0]
+                }
+            res.render('teamPayrollPerWinPerYear',{
+                "yearID": yearID, "years": years,"salaries": salaries
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({"statuscode": 500,"message": "error occurred"})
+        }finally {
+            connection.end();
+        }
+    })().catch(err => console.error(err.stack))
+})
 module.exports=router

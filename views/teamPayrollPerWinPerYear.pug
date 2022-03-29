@@ -1,0 +1,29 @@
+html
+	head
+		title='Team Payroll Per Win Per Year'
+		style
+			include ../public/baseballSalaries.css
+	body
+		h1='Team Payroll Per Win Per Year'
+
+	select(onchange="window.location.href='/teamPayrollPerWinPerYear?yearID='+this.value")
+		option(value=0) # Select a Year
+		each year in years
+			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
+
+	if salaries 
+		table 
+			thead 
+				tr 
+					th Team ID 
+					th Wins
+					th Total PayRoll 
+					th Cost per win
+			tbody 
+				each salary in salaries 
+					tr 
+						td #{salary.teamID}
+						td #{salary.won}
+						td(align="right") #{salary.total_sal.toLocaleString('en-US',{style: 'currency',currency: 'USD'})}
+						td(align="right") #{salary.cost_per_win.toLocaleString('en-US' ,{style: 'currency' ,currency: 'USD'})}
+						
