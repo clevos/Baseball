@@ -81,4 +81,38 @@ router.get('/teamPayrollPerWinPerYear', (req, res) => {
         }
     })().catch(err => console.error(err.stack))
 })
+
+router.get('/salariesPerTeamPerYear',(req,res) => {
+    let yearID
+    let teamID
+    if(req.query['yearID']){
+        yearID = req.query['yearID']
+    } 
+    if(req.query['teamID']){
+        teamID = req.query['teamID']
+    } 
+    ;(async() => {
+        const connection = await getMySQLConnection()
+        try {
+            await connection.beginTransaction()
+            let results = await connection.query('select distinct yearID from team where yearID > 0 order by yearID')
+            const years = results[0]
+            let teams
+            if (yearID && +yearID >0){
+                results = await connection.query(`select teamID From team where yearID = ${yearID} order By teamID`)
+                teams = results[0]
+            }
+            // need to execute query for players salaries 
+            
+            // need to render the HTML template
+            res.render('salariesPerTeamPerYear',{"yearID": yearID,"teamID": teamID,"years":years,"teams":teams})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({"status_message": "internal server error"})
+        }
+        finally{
+            connection.end()
+        }
+    })().catch(err => console.error(err.stack))
+})
 module.exports=router
