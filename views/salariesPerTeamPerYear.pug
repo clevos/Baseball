@@ -16,3 +16,16 @@ html
 			option(value=none) # Select a Team
 			each team in teams
 				option(value=team.teamID selected=(team.teamID==teamID)) #{team.teamID}
+	
+	if salaries 
+		table 
+			thead 
+				th First Name 
+				th Last Name 
+				th Salary 
+			tbody 
+				each salary in salaries 
+					tr 
+						td #{salary.fname}
+						td #{salary.lname}
+						td #{salary.salary.toLocaleString('en-US',{ style: 'currency', currency: 'USD'})}

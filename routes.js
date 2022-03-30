@@ -28,27 +28,32 @@ router.get('/', (req, res) => {
 })
 router.get('/averageTeamSalariesPerYear', (req, res) => {
     let yearID
-    if(req.query['yearID']){
-        yearID =req.query['yearID']
-    }
-    ;(async()=>{
-        const connection =await getMySQLConnection()
+    if (req.query['yearID']) {
+        yearID = req.query['yearID']
+    };
+    (async () => {
+        const connection = await getMySQLConnection()
         try {
             await connection.beginTransaction()
             let results = await connection.query('Select distinct yearID From salaries order By yearID')
             const years = results[0]
-            let salaries 
-            if(yearID && +yearID>0){
-                 results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From salaries Where yearID = ${yearID} group by teamID order by total_sal desc`)  
-                 salaries = results[0]
-                }
-            res.render('averageTeamSalariesPerYear',{
-                "yearID": yearID, "years": years,"salaries": salaries
+            let salaries
+            if (yearID && +yearID > 0) {
+                results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From salaries Where yearID = ${yearID} group by teamID order by total_sal desc`)
+                salaries = results[0]
+            }
+            res.render('averageTeamSalariesPerYear', {
+                "yearID": yearID,
+                "years": years,
+                "salaries": salaries
             })
         } catch (error) {
             console.log(error)
-            res.status(500).json({"statuscode": 500,"message": "error occurred"})
-        }finally {
+            res.status(500).json({
+                "statuscode": 500,
+                "message": "error occurred"
+            })
+        } finally {
             connection.end();
         }
     })().catch(err => console.error(err.stack))
@@ -56,63 +61,83 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
 
 router.get('/teamPayrollPerWinPerYear', (req, res) => {
     let yearID
-    if(req.query['yearID']){
-        yearID =req.query['yearID']
-    }
-    ;(async()=>{
-        const connection =await getMySQLConnection()
+    if (req.query['yearID']) {
+        yearID = req.query['yearID']
+    };
+    (async () => {
+        const connection = await getMySQLConnection()
         try {
             await connection.beginTransaction()
             let results = await connection.query('Select distinct yearID From salaries order By yearID')
             const years = results[0]
-            let salaries 
-            if(yearID && +yearID>0){
-                 results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from salaries join team using(teamID,yearID) where salaries.yearID= ${yearID} group by salaries.teamID, won order by cost_per_win desc`)  
-                 salaries = results[0]
-                }
-            res.render('teamPayrollPerWinPerYear',{
-                "yearID": yearID, "years": years,"salaries": salaries
+            let salaries
+            if (yearID && +yearID > 0) {
+                results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from salaries join team using(teamID,yearID) where salaries.yearID= ${yearID} group by salaries.teamID, won order by cost_per_win desc`)
+                salaries = results[0]
+            }
+            res.render('teamPayrollPerWinPerYear', {
+                "yearID": yearID,
+                "years": years,
+                "salaries": salaries
             })
         } catch (error) {
             console.log(error)
-            res.status(500).json({"statuscode": 500,"message": "error occurred"})
-        }finally {
+            res.status(500).json({
+                "statuscode": 500,
+                "message": "error occurred"
+            })
+        } finally {
             connection.end();
         }
     })().catch(err => console.error(err.stack))
 })
 
-router.get('/salariesPerTeamPerYear',(req,res) => {
+router.get('/salariesPerTeamPerYear', (req, res) => {
     let yearID
     let teamID
-    if(req.query['yearID']){
+    if (req.query['yearID']) {
         yearID = req.query['yearID']
-    } 
-    if(req.query['teamID']){
+    }
+    if (req.query['teamID']) {
         teamID = req.query['teamID']
-    } 
-    ;(async() => {
+    };
+    (async () => {
         const connection = await getMySQLConnection()
         try {
             await connection.beginTransaction()
             let results = await connection.query('select distinct yearID from team where yearID > 0 order by yearID')
             const years = results[0]
             let teams
-            if (yearID && +yearID >0){
+            if (yearID && +yearID > 0) {
                 results = await connection.query(`select teamID From team where yearID = ${yearID} order By teamID`)
                 teams = results[0]
             }
             // need to execute query for players salaries 
-            
+            let salaries
+            if (teamID && teamID !== 'none') {
+                results = await connection.query(`select fname, lname, salary
+                From players join salaries on players.id=salaries.playerID
+                where yearID=${yearID} and teamID ='${teamID}'
+                order by salary desc`)
+                salaries = results[0]
+            }
+
             // need to render the HTML template
-            res.render('salariesPerTeamPerYear',{"yearID": yearID,"teamID": teamID,"years":years,"teams":teams})
+            res.render('salariesPerTeamPerYear', {
+                "yearID": yearID,
+                "teamID": teamID,
+                "years": years,
+                "teams": teams,
+                "salaries":salaries
+            })
         } catch (error) {
             console.log(error)
-            res.status(500).json({"status_message": "internal server error"})
-        }
-        finally{
+            res.status(500).json({
+                "status_message": "internal server error"
+            })
+        } finally {
             connection.end()
         }
     })().catch(err => console.error(err.stack))
 })
-module.exports=router
+module.exports = router
