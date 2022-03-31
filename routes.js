@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const router = express.Router()
 const mysql = require('mysql2/promise')
 const fs = require('fs')
+const { Router } = require('express')
 
 router.use(bodyParser.urlencoded({
     extended: true
@@ -137,6 +138,35 @@ router.get('/salariesPerTeamPerYear', (req, res) => {
             })
         } finally {
             connection.end()
+        }
+    })().catch(err => console.error(err.stack))
+})
+router.get('/highestPaidPlayersPerTeamPerYear',(req,res) => {
+    let yearID 
+    if(req.query['yearID']){
+        yearID = req.query['yearID']
+    }
+    ;(async() =>{
+        const connection = await getMySQLConnection()
+        try {
+          await connection.beginTransaction()
+          let results =await connection.query(`select distinct yearID from team where yearID >0 Order By yearID`)
+          const years = results[0]
+          // Need to execute the query to select highest paid players
+          let salaries
+          if(yearID && +yearID>0){
+              results=await connection.query(`select teamID,fname,lname,salary from players Join salaries s on players.id =s.playerID
+              where yearID= ${yearID} and salary =(select max(salary) from salaries where yearID=s.yearID and teamID =s.teamID)`)
+            salaries = results[0]
+            
+            }
+          // Need to render the pug template
+          res.render('highestPaidPlayersPerTeamPerYear',{"yearID": yearID,"years":years,"salaries":salaries})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                "status_message": "internal server error"
+            })
         }
     })().catch(err => console.error(err.stack))
 })

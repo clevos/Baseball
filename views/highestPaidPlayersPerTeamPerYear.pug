@@ -1,0 +1,36 @@
+html 
+	head 
+		title='Highest Paid Players Per Team Per Year'
+		style 
+			include ../public/baseballSalaries.css 
+		script. 
+			function pagereset(){
+				document.getElementById('spin').style="display: inline-block"
+				if(document.getElementById('data')){
+					document.getElementById('data').innerHTML=""
+				}
+			}
+	body 
+		h1= 'Highest Paid Players Per Team Per Year'
+
+	select(onchange="pagereset(); window.location.href='/highestPaidPlayersPerTeamPerYear?yearID='+this.value")
+		option(value=0) # Select year 
+		each year in years 
+			option(value=year.yearID selected=(year.yearID==yearID)) #{year.yearID}
+	
+	if salaries 
+		table(id="data")
+			thead 
+				tr 
+					th Team ID
+					th First name 
+					th Last name 
+					th Salary 
+			tbody
+				each salary in salaries 
+					tr 
+						td #{salary.teamID}
+						td #{salary.fname}
+						td #{salary.lname}
+						td(align ="right") #{salary.salary.toLocaleString('en-US',{style: 'currency',currency:'USD'})}
+	img(id="spin" src="spinning-loading.gif" style="display: none" width ="100px" height ="100px")
