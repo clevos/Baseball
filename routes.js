@@ -32,6 +32,14 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
     if (req.query['yearID']) {
         yearID = req.query['yearID']
     };
+    let sortColumn='teamID'
+    if(req.query['sortColumn']){
+        sortColumn=req.query['sortColumn']
+    }
+    let sortOrder ='asc'
+    if(req.query['sortOrder']){
+        sortOrder =req.query['sortOrder']
+    }
     (async () => {
         const connection = await getMySQLConnection()
         try {
@@ -40,13 +48,14 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
             const years = results[0]
             let salaries
             if (yearID && +yearID > 0) {
-                results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From salaries Where yearID = ${yearID} group by teamID order by total_sal desc`)
+                results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From salaries Where yearID = ${yearID} group by teamID order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
             }
             res.render('averageTeamSalariesPerYear', {
                 "yearID": yearID,
                 "years": years,
-                "salaries": salaries
+                "salaries": salaries,
+                "sortOrder": sortOrder
             })
         } catch (error) {
             console.log(error)
@@ -65,6 +74,14 @@ router.get('/teamPayrollPerWinPerYear', (req, res) => {
     if (req.query['yearID']) {
         yearID = req.query['yearID']
     };
+    let sortColumn ='teamID'
+    if(req.query['sortColumn']){
+        sortColumn=req.query['sortColumn']
+    }
+    let sortOrder ='asc'
+    if(req.query['sortOrder']){
+        sortOrder=req.query['sortOrder']
+    }
     (async () => {
         const connection = await getMySQLConnection()
         try {
@@ -73,13 +90,14 @@ router.get('/teamPayrollPerWinPerYear', (req, res) => {
             const years = results[0]
             let salaries
             if (yearID && +yearID > 0) {
-                results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from salaries join team using(teamID,yearID) where salaries.yearID= ${yearID} group by salaries.teamID, won order by cost_per_win desc`)
+                results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from salaries join team using(teamID,yearID) where salaries.yearID= ${yearID} group by salaries.teamID, won order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
             }
             res.render('teamPayrollPerWinPerYear', {
                 "yearID": yearID,
                 "years": years,
-                "salaries": salaries
+                "salaries": salaries,
+                "sortOrder": sortOrder
             })
         } catch (error) {
             console.log(error)
@@ -102,6 +120,14 @@ router.get('/salariesPerTeamPerYear', (req, res) => {
     if (req.query['teamID']) {
         teamID = req.query['teamID']
     };
+    let sortColumn ='salary'
+    if(req.query['sortColumn']){
+        sortColumn=req.query['sortColumn']
+    }
+    let sortOrder ='asc'
+    if(req.query['sortOrder']){
+        sortOrder=req.query['sortOrder']
+    }
     (async () => {
         const connection = await getMySQLConnection()
         try {
@@ -119,7 +145,7 @@ router.get('/salariesPerTeamPerYear', (req, res) => {
                 results = await connection.query(`select fname, lname, salary
                 From players join salaries on players.id=salaries.playerID
                 where yearID=${yearID} and teamID ='${teamID}'
-                order by salary desc`)
+                order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
             }
 
@@ -129,7 +155,8 @@ router.get('/salariesPerTeamPerYear', (req, res) => {
                 "teamID": teamID,
                 "years": years,
                 "teams": teams,
-                "salaries":salaries
+                "salaries":salaries,
+                "sortOrder": sortOrder
             })
         } catch (error) {
             console.log(error)
@@ -146,6 +173,14 @@ router.get('/highestPaidPlayersPerTeamPerYear',(req,res) => {
     if(req.query['yearID']){
         yearID = req.query['yearID']
     }
+    let sortColumn ='teamID'
+    if(req.query['sortColumn']){
+        sortColumn=req.query['sortColumn']
+    }
+    let sortOrder ='asc'
+    if(req.query['sortOrder']){
+        sortOrder=req.query['sortOrder']
+    }
     ;(async() =>{
         const connection = await getMySQLConnection()
         try {
@@ -156,12 +191,12 @@ router.get('/highestPaidPlayersPerTeamPerYear',(req,res) => {
           let salaries
           if(yearID && +yearID>0){
               results=await connection.query(`select teamID,fname,lname,salary from players Join salaries s on players.id =s.playerID
-              where yearID= ${yearID} and salary =(select max(salary) from salaries where yearID=s.yearID and teamID =s.teamID)`)
+              where yearID= ${yearID} and salary =(select max(salary) from salaries where yearID=s.yearID and teamID =s.teamID) Order by ${sortColumn} ${sortOrder}`)
             salaries = results[0]
             
             }
           // Need to render the pug template
-          res.render('highestPaidPlayersPerTeamPerYear',{"yearID": yearID,"years":years,"salaries":salaries})
+          res.render('highestPaidPlayersPerTeamPerYear',{"yearID": yearID,"years":years,"salaries":salaries,"sortOrder": sortOrder})
         } catch (error) {
             console.log(error)
             res.status(500).json({

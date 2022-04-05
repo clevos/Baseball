@@ -3,10 +3,13 @@ html
 		title='Team Payroll Per Win Per Year'
 		style
 			include ../public/baseballSalaries.css
+		script.
+			var sortOrder ='!{sortOrder}'
+		script(src="../code.js")
 	body
 		h1='Team Payroll Per Win Per Year'
 
-	select(onchange="window.location.href='/teamPayrollPerWinPerYear?yearID='+this.value")
+	select(id="yearID" onchange="window.location.href='/teamPayrollPerWinPerYear?yearID='+this.value")
 		option(value=0) # Select a Year
 		each year in years
 			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
@@ -15,10 +18,10 @@ html
 		table 
 			thead 
 				tr 
-					th Team ID 
-					th Wins
-					th Total PayRoll 
-					th Cost per win
+					th <a onclick="sortData('/teamPayrollPerWinPerYear', 'teamID')">Team ID</a> 
+					th <a onclick="sortData('/teamPayrollPerWinPerYear','won')">Wins</a>
+					th <a onclick="sortData('/teamPayrollPerWinPerYear','total_sal')">Total PayRoll</a> 
+					th <a onclick="sortData('/teamPayrollPerWinPerYear','cost_per_win')">Cost per win</a>
 			tbody 
 				each salary in salaries 
 					tr 

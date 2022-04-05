@@ -66,3 +66,7 @@ table{
     margin-right: auto;
     background-color: lightblue;
 }
+th{
+    cursor: pointer;
+    text-decoration: underline;
+}

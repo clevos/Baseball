@@ -3,10 +3,13 @@ html
 		title='Average Team Salaries Per Year'
 		style
 			include ../public/baseballSalaries.css
+		script.
+			var sortOrder ='!{sortOrder}'
+		script(src="./code.js")
 	body
 		h1='Average Team Salaries Per Year'
 
-	select(onchange="window.location.href='/averageTeamSalariesPerYear?yearID='+this.value")
+	select(id="yearID" onchange="window.location.href='/averageTeamSalariesPerYear?yearID='+this.value")
 		option(value=0) # Select a Year
 		each year in years
 			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
@@ -15,9 +18,9 @@ html
 		table 
 			thead 
 				tr 
-					th Team ID 
-					th Total PayRoll 
-					th Average Salary
+					th <a onclick="sortData('/averageTeamSalariesPerYear', 'teamID')">Team ID</a> 
+					th <a onclick="sortData('/averageTeamSalariesPerYear','total_sal')">Total PayRoll</a> 
+					th <a onclick="sortData('/averageTeamSalariesPerYear','avg_sal')">Average Salary</a>
 			tbody 
 				each salary in salaries 
 					tr 
