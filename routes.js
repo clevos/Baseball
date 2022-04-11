@@ -205,4 +205,37 @@ router.get('/highestPaidPlayersPerTeamPerYear',(req,res) => {
         }
     })().catch(err => console.error(err.stack))
 })
+
+
+router.get('/graphAverageTeamSalariesPerYear',(req,res) => {
+  let yearID 
+  if(req.query['yearID']){
+    yearID=req.query['yearID']
+  }
+  ;(async() => {
+    const connection =await getMySQLConnection()
+    try{
+      await connection.beginTransaction()
+      let teams
+      let salaries
+      if(yearID && +yearID>0){
+        let results =await connection.query(`select teamID, cast(avg(salary) as double) as avg_sal From salaries Where yearID=${yearID} group By teamID order By teamID`)
+        teams =results[0].map(t => t.teamID)
+        salaries =results[0].map(t => t.avg_sal)
+      }
+      res.render('graph',{
+        "title": `Average Team Salaries For ${yearID}`,
+        "labels": teams,
+        "data": salaries
+      })
+    }catch(err){
+      console.log(err)
+      res.status(500).json({
+        "status_message": "internal server error"
+    })
+    }finally{
+      connection.end()
+    }
+  })().catch(err => console.error(err.stack))
+})
 module.exports = router

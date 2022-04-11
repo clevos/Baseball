@@ -14,7 +14,8 @@ html
 		each year in years
 			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
 
-	if salaries 
+	if salaries
+		button(onclick="window.location.href='/graphAverageTeamSalariesPerYear?yearID='+document.getElementById('yearID').value") Graph 
 		table 
 			thead 
 				tr 

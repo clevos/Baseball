@@ -1,0 +1,34 @@
+html 
+	head 
+		style 
+			include ../public/baseballSalaries.css
+		script(src="https://cdn.jsdelivr.net/npm/chart.js")
+		script.
+			const data = {
+				labels: [!{'"' + labels.join('","') + '"'}],
+				datasets: [{
+					label: '!{title}',
+					backgroundColor: 'rgb(255,99,132)',
+					borderColor: 'rgb(255,99,132)',
+					data: [!{data}]
+				}]
+			}
+
+			const config ={
+				type: 'line',
+				data: data,
+				options: {
+					maintainAspectRatio: false
+				}
+			}
+		script.
+			function createGraph(){
+				const myChart =new Chart(
+					document.getElementById('myChart'),
+					config
+				)
+			}
+
+	body(onload="createGraph()")
+		div(style="width: 800px; height: 270px;")
+			canvas(id="myChart")
