@@ -238,4 +238,104 @@ router.get('/graphAverageTeamSalariesPerYear',(req,res) => {
     }
   })().catch(err => console.error(err.stack))
 })
+
+router.get('/graphTeamPayrollPerWinPerYear',(req,res) => {
+  let yearID 
+  if(req.query['yearID']){
+    yearID=req.query['yearID']
+  }
+  ;(async() => {
+    const connection =await getMySQLConnection()
+    try{
+      await connection.beginTransaction()
+      let teams
+      let salaries
+      if(yearID && +yearID>0){
+        let results =await connection.query(`select salaries.teamID, cast(sum(salary) /won as double) as cost_per_win From salaries join team using (teamID,yearID) Where salaries.yearID=${yearID} group By salaries.teamID Order By teamID`)
+        teams =results[0].map(t => t.teamID)
+        salaries =results[0].map(t => t.cost_per_win)
+      }
+      res.render('graph',{
+        "title": ` Team Payroll Per Win For ${yearID}`,
+        "labels": teams,
+        "data": salaries
+      })
+    }catch(err){
+      console.log(err)
+      res.status(500).json({
+        "status_message": "internal server error"
+    })
+    }finally{
+      connection.end()
+    }
+  })().catch(err => console.error(err.stack))
+})
+router.get('/graphHighestPaidPlayersPerTeamPerYear',(req,res) => {
+  let yearID 
+  if(req.query['yearID']){
+    yearID=req.query['yearID']
+  }
+  ;(async() => {
+    const connection =await getMySQLConnection()
+    try{
+      await connection.beginTransaction()
+      let players
+      let salaries
+      if(yearID && +yearID>0){
+        let results =await connection.query(`select teamID,fname,lname,salary From players p join salaries s On p.ID=s.playerID Where YearID =${yearID} and salary=(select max(salary) From salaries Where yearID=s.yearID and teamID=s.teamID) Order By teamID`)
+        players =results[0].map(t => `${t.fname} ${t.lname} (${t.teamID})`)
+        salaries =results[0].map(t => t.salary)
+      }
+      res.render('graph',{
+        "title": ` Highest Paid Players Per Team For ${yearID}`,
+        "labels": players,
+        "data": salaries
+      })
+    }catch(err){
+      console.log(err)
+      res.status(500).json({
+        "status_message": "internal server error"
+    })
+    }finally{
+      connection.end()
+    }
+  })().catch(err => console.error(err.stack))
+})
+
+router.get('/graphSalariesPerTeamPerYear',(req,res) => {
+  let yearID 
+  if(req.query['yearID']){
+    yearID=req.query['yearID']
+  }
+  let teamID
+  if(req.query['teamID']){
+    teamID =req.query['teamID']
+  }
+  ;(async() => {
+    const connection =await getMySQLConnection()
+    try{
+      await connection.beginTransaction()
+      let players
+      let salaries
+      if(teamID && teamID!=='NONE'){
+        let results =await connection.query(`select fname,lname,salary From players Join salaries On players.ID=salaries.playerID Where yearID=${yearID} and teamID='${teamID}' Order By lName`)
+        players =results[0].map(t => `${t.fname} ${t.lname}`)
+        salaries =results[0].map(t => t.salary)
+      }
+      res.render('graph',{
+        "title": ` PayRoll Data For ${teamID} For ${yearID}`,
+        "labels": players,
+        "data": salaries
+      })
+    }catch(err){
+      console.log(err)
+      res.status(500).json({
+        "status_message": "internal server error"
+    })
+    }finally{
+      connection.end()
+    }
+  })().catch(err => console.error(err.stack))
+})
+
 module.exports = router

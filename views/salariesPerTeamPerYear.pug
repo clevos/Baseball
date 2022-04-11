@@ -20,7 +20,8 @@ html
 			each team in teams
 				option(value=team.teamID selected=(team.teamID==teamID)) #{team.teamID}
 	
-	if salaries 
+	if salaries
+		button(onclick="window.location.href='/graphSalariesPerTeamPerYear?yearID='+document.getElementById('yearID').value+'&teamID='+document.getElementById('teamID').value") Graph  
 		table 
 			thead 
 				th <a onclick="sortData('/salariesPerTeamPerYear', 'fname')">First Name</a>

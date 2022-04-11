@@ -15,6 +15,7 @@ html
 			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
 
 	if salaries 
+		button(onclick="window.location.href='/graphTeamPayrollPerWinPerYear?yearID='+document.getElementById('yearID').value") Graph 
 		table 
 			thead 
 				tr 
