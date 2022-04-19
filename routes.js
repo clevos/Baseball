@@ -44,11 +44,11 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
         const connection = await getMySQLConnection()
         try {
             await connection.beginTransaction()
-            let results = await connection.query('Select distinct yearID From salaries order By yearID')
+            let results = await connection.query('Select distinct yearID From payroll order By yearID')
             const years = results[0]
             let salaries
             if (yearID && +yearID > 0) {
-                results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From salaries Where yearID = ${yearID} group by teamID order by ${sortColumn} ${sortOrder}`)
+                results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From payroll Where yearID = ${yearID} group by teamID order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
             }
             res.render('averageTeamSalariesPerYear', {
@@ -86,11 +86,11 @@ router.get('/teamPayrollPerWinPerYear', (req, res) => {
         const connection = await getMySQLConnection()
         try {
             await connection.beginTransaction()
-            let results = await connection.query('Select distinct yearID From salaries order By yearID')
+            let results = await connection.query('Select distinct yearID From payroll order By yearID')
             const years = results[0]
             let salaries
             if (yearID && +yearID > 0) {
-                results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from salaries join team using(teamID,yearID) where salaries.yearID= ${yearID} group by salaries.teamID, won order by ${sortColumn} ${sortOrder}`)
+                results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from payroll join team using(teamID,yearID) where payroll.yearID= ${yearID} group by payroll.teamID, won order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
             }
             res.render('teamPayrollPerWinPerYear', {
@@ -142,8 +142,8 @@ router.get('/salariesPerTeamPerYear', (req, res) => {
             // need to execute query for players salaries 
             let salaries
             if (teamID && teamID !== 'none') {
-                results = await connection.query(`select fname, lname, salary
-                From players join salaries on players.id=salaries.playerID
+                results = await connection.query(`select nameFirst as fname, nameLast as lname, salary
+                From people join payroll on people.playerID=payroll.playerID
                 where yearID=${yearID} and teamID ='${teamID}'
                 order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
@@ -190,8 +190,8 @@ router.get('/highestPaidPlayersPerTeamPerYear',(req,res) => {
           // Need to execute the query to select highest paid players
           let salaries
           if(yearID && +yearID>0){
-              results=await connection.query(`select teamID,fname,lname,salary from players Join salaries s on players.id =s.playerID
-              where yearID= ${yearID} and salary =(select max(salary) from salaries where yearID=s.yearID and teamID =s.teamID) Order by ${sortColumn} ${sortOrder}`)
+              results=await connection.query(`select teamID,nameFirst as fname,nameLast as lname,salary from people Join payroll s on people.playerID =s.playerID
+              where yearID= ${yearID} and salary =(select max(salary) from payroll where yearID=s.yearID and teamID =s.teamID) Order by ${sortColumn} ${sortOrder}`)
             salaries = results[0]
             
             }
@@ -219,7 +219,7 @@ router.get('/graphAverageTeamSalariesPerYear',(req,res) => {
       let teams
       let salaries
       if(yearID && +yearID>0){
-        let results =await connection.query(`select teamID, cast(avg(salary) as double) as avg_sal From salaries Where yearID=${yearID} group By teamID order By teamID`)
+        let results =await connection.query(`select teamID, cast(avg(salary) as double) as avg_sal From payroll Where yearID=${yearID} group By teamID order By teamID`)
         teams =results[0].map(t => t.teamID)
         salaries =results[0].map(t => t.avg_sal)
       }
@@ -251,7 +251,7 @@ router.get('/graphTeamPayrollPerWinPerYear',(req,res) => {
       let teams
       let salaries
       if(yearID && +yearID>0){
-        let results =await connection.query(`select salaries.teamID, cast(sum(salary) /won as double) as cost_per_win From salaries join team using (teamID,yearID) Where salaries.yearID=${yearID} group By salaries.teamID Order By teamID`)
+        let results =await connection.query(`select payroll.teamID, cast(sum(salary) /won as double) as cost_per_win From payroll join team using (teamID,yearID) Where payroll.yearID=${yearID} group By payroll.teamID Order By teamID`)
         teams =results[0].map(t => t.teamID)
         salaries =results[0].map(t => t.cost_per_win)
       }
@@ -282,7 +282,7 @@ router.get('/graphHighestPaidPlayersPerTeamPerYear',(req,res) => {
       let players
       let salaries
       if(yearID && +yearID>0){
-        let results =await connection.query(`select teamID,fname,lname,salary From players p join salaries s On p.ID=s.playerID Where YearID =${yearID} and salary=(select max(salary) From salaries Where yearID=s.yearID and teamID=s.teamID) Order By teamID`)
+        let results =await connection.query(`select teamID,nameFirst as fName,nameLast as lname,salary From people p join payroll s On p.playerID=s.playerID Where YearID =${yearID} and salary=(select max(salary) From payroll Where yearID=s.yearID and teamID=s.teamID) Order By teamID`)
         players =results[0].map(t => `${t.fname} ${t.lname} (${t.teamID})`)
         salaries =results[0].map(t => t.salary)
       }
@@ -318,7 +318,7 @@ router.get('/graphSalariesPerTeamPerYear',(req,res) => {
       let players
       let salaries
       if(teamID && teamID!=='NONE'){
-        let results =await connection.query(`select fname,lname,salary From players Join salaries On players.ID=salaries.playerID Where yearID=${yearID} and teamID='${teamID}' Order By lName`)
+        let results =await connection.query(`select nameFirst as fname,nameLast as lname,salary From people Join payroll On people.playerID=payroll.playerID Where yearID=${yearID} and teamID='${teamID}' Order By lName`)
         players =results[0].map(t => `${t.fname} ${t.lname}`)
         salaries =results[0].map(t => t.salary)
       }
