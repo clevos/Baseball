@@ -132,11 +132,11 @@ router.get('/salariesPerTeamPerYear', (req, res) => {
         const connection = await getMySQLConnection()
         try {
             await connection.beginTransaction()
-            let results = await connection.query('select distinct yearID from team where yearID > 0 order by yearID')
+            let results = await connection.query('select distinct yearID from payroll where yearID > 0 order by yearID')
             const years = results[0]
             let teams
             if (yearID && +yearID > 0) {
-                results = await connection.query(`select teamID From team where yearID = ${yearID} order By teamID`)
+                results = await connection.query(`select distinct teamID From payroll where yearID = ${yearID} order By teamID`)
                 teams = results[0]
             }
             // need to execute query for players salaries 
@@ -185,7 +185,7 @@ router.get('/highestPaidPlayersPerTeamPerYear',(req,res) => {
         const connection = await getMySQLConnection()
         try {
           await connection.beginTransaction()
-          let results =await connection.query(`select distinct yearID from team where yearID >0 Order By yearID`)
+          let results =await connection.query(`select distinct yearID from payroll where yearID >0 Order By yearID`)
           const years = results[0]
           // Need to execute the query to select highest paid players
           let salaries
@@ -282,7 +282,7 @@ router.get('/graphHighestPaidPlayersPerTeamPerYear',(req,res) => {
       let players
       let salaries
       if(yearID && +yearID>0){
-        let results =await connection.query(`select teamID,nameFirst as fName,nameLast as lname,salary From people p join payroll s On p.playerID=s.playerID Where YearID =${yearID} and salary=(select max(salary) From payroll Where yearID=s.yearID and teamID=s.teamID) Order By teamID`)
+        let results =await connection.query(`select teamID,nameFirst as fname,nameLast as lname,salary From people p join payroll s On p.playerID=s.playerID Where YearID =${yearID} and salary=(select max(salary) From payroll Where yearID=s.yearID and teamID=s.teamID) Order By teamID`)
         players =results[0].map(t => `${t.fname} ${t.lname} (${t.teamID})`)
         salaries =results[0].map(t => t.salary)
       }
