@@ -90,7 +90,7 @@ router.get('/teamPayrollPerWinPerYear', (req, res) => {
             const years = results[0]
             let salaries
             if (yearID && +yearID > 0) {
-                results = await connection.query(`Select teamID, won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/won as double) as cost_per_win from payroll join team using(teamID,yearID) where payroll.yearID= ${yearID} group by payroll.teamID, won order by ${sortColumn} ${sortOrder}`)
+                results = await connection.query(`Select teamID, w as won, cast(sum(salary) as double) as total_sal, cast(sum(salary)/w as double) as cost_per_win from payroll join teams using(teamID,yearID) where payroll.yearID= ${yearID} group by payroll.teamID, w order by ${sortColumn} ${sortOrder}`)
                 salaries = results[0]
             }
             res.render('teamPayrollPerWinPerYear', {
@@ -251,7 +251,7 @@ router.get('/graphTeamPayrollPerWinPerYear',(req,res) => {
       let teams
       let salaries
       if(yearID && +yearID>0){
-        let results =await connection.query(`select payroll.teamID, cast(sum(salary) /won as double) as cost_per_win From payroll join team using (teamID,yearID) Where payroll.yearID=${yearID} group By payroll.teamID Order By teamID`)
+        let results =await connection.query(`select payroll.teamID, cast(sum(salary) /w as double) as cost_per_win From payroll join teams using (teamID,yearID) Where payroll.yearID=${yearID} group By payroll.teamID Order By teamID`)
         teams =results[0].map(t => t.teamID)
         salaries =results[0].map(t => t.cost_per_win)
       }
