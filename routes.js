@@ -4,6 +4,7 @@ const router = express.Router()
 const mysql = require('mysql2/promise')
 const fs = require('fs')
 const { Router } = require('express')
+const { compile } = require('pug')
 
 router.use(bodyParser.urlencoded({
     extended: true
@@ -337,5 +338,48 @@ router.get('/graphSalariesPerTeamPerYear',(req,res) => {
     }
   })().catch(err => console.error(err.stack))
 })
-
+router.get('/playerSalaryOverTime',(req,res) => {
+  let yearID 
+  if(req.query['yearID']){
+    yearID=req.query['yearID']
+  }
+  let playerID 
+  if(req.query['playerID']){
+    playerID=req.query['playerID']
+  }
+  let sortColumn='yearID'
+  if(req.query['sortColumn']){
+      sortColumn=req.query['sortColumn']
+  }
+  let sortOrder ='asc'
+  if(req.query['sortOrder']){
+      sortOrder =req.query['sortOrder']
+  }
+  ; (async () => {
+    const connection = await getMySQLConnection()
+    try{
+      await connection.beginTransaction()
+      let results = await connection.query('select distinct yearID from teams where yearID between 1985 and 2016 order by 1')
+      const years= results[0]
+      let players
+      if(yearID && +yearID > 0){
+        results = await connection.query(`select playerID, nameFirst, nameLast, teamID, yearID, salary
+          from people join payroll using(playerID) where yearID = ${yearID} order by salary desc limit 20`)
+        players =results[0]
+      }
+      let salaries
+      if(playerID){
+        results = await connection.query(`select * from payroll where playerID = '${playerID}' order by ${sortColumn} ${sortOrder}`)
+        salaries =results[0]
+      }
+      res.render('playersalaryovertime', { "yearID": yearID, "years": years, "playerID": playerID, "players": players, "salaries": salaries, "sortOrder": sortOrder })
+    }catch(err){
+      console.log(err)
+      res.status(500).json({ "status_message": "internal server error"})
+    
+    }finally{
+      connection.end()
+    }
+  })().catch(err => console.error(err.stack))
+})
 module.exports = router
