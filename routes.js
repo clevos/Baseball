@@ -382,4 +382,38 @@ router.get('/playerSalaryOverTime',(req,res) => {
     }
   })().catch(err => console.error(err.stack))
 })
+
+router.get('/graphPlayerSalaryOverTime', (req,res) => {
+  let playerID 
+  if(req.query['playerID']){
+    playerID=req.query['playerID']
+  }
+
+  ;(async () =>{
+    const connection = await getMySQLConnection()
+    try{
+      await connection.beginTransaction()
+      let years
+      let salaries
+      let playerName
+      if(playerID){
+        let results = await connection.query(`select concat(nameFirst,' ',nameLast) as playerName,yearID,teamID,salary from people join payroll using (playerID) where payroll.playerID= '${playerID}' order by yearID`)
+        playerName= results[0][0]['playerName']
+        years = results[0].map(t => `${t.yearID} (${t.teamID})`)
+        salaries = results[0].map(t => t.salary)
+      }
+      res.render('graph', {
+        "title": `Player Salary Over Time for ${playerName}`,
+        "labels": years,
+        "data": salaries
+      })
+    }catch(err){
+      console.log(err)
+      res.status(500).json({ "status_message": "internal server error"})
+    
+    }finally{
+      connection.end()
+    }
+  })().catch(err => console.error(err.stack))
+})
 module.exports = router
