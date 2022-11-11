@@ -1,4 +1,16 @@
 # My Capstone Project
+My capstone project is about analyzing baseball salaries from 1985 to 2016. Data was publicly avaliable over the internet which I download and imported. Using the technical skills I learned in previous coursework ([ISC-150](http://catalog.oswego.edu/preview_course_nopop.php?catoid=40&coid=58569),[ISC-325](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=63732),[ISC-250](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=64649),[ISC-329](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=63733)), I built a multi-tier web application to analyze and present baseball players salaries from 1985 to 2016. how they change overtime which people should be able to see by clicking on the use case and clicking the word graph to show the line graph for that year.
+## Tech Stack
+1. Javascript
+2. Node.js
+3. Express.js
+4. Pug templates
+5. HTML
+6. CSS
+7. Bootstrap
+8. mySQL
+9. Chart.js
+10. Git
 ## Architecture
 ![architecture](screenShots/architecture.png)
 Request starts in the browser and is sent to the server as where the response is sent from the server to the browser.
@@ -55,5 +67,10 @@ Line 18 gives us the button for the graph
 2. How I sorted the tables? The SQL select statement has an order by clause to sort the data in either ascending or descending order.
 3. How did I connect to the database using node.js? First I had to use npm to install mySQL2 node package. Second I used the code 13 through21 in routes.js which runs in node.js
 
-
+# Example use case: Player salary over time
+### You click on this use case and what comes up is two dropdown menus. First menu is the year from 1985 to 2016. Then there is a second menu which is for the players that played during those years.
+![players](screenShots/players.png)
+### The user sees the player and the teams they played for along with their salaries during those years.
+![salaries](screenShots/salaries.png)
+ ### After that you as the user has the ability to click on the graph button to show the data as a line graph.
 ![graph](screenShots/graph.png)
