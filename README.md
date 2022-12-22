@@ -1,5 +1,5 @@
 # My Capstone Project
-My capstone project is about analyzing baseball salaries from 1985 to 2016. Data was publicly avaliable over the internet which I download and imported. Using the technical skills I learned in previous coursework ([ISC-150](http://catalog.oswego.edu/preview_course_nopop.php?catoid=40&coid=58569),[ISC-325](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=63732),[ISC-250](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=64649),[ISC-329](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=63733)), I built a multi-tier web application to analyze and present baseball players salaries from 1985 to 2016. how they change overtime which people should be able to see by clicking on the use case and clicking the word graph to show the line graph for that year.
+My capstone project is about analyzing baseball salaries from 1985 to 2016. Data was publicly avaliable over the internet which I download and imported. Using the technical skills I learned in previous coursework ([ISC-150](http://catalog.oswego.edu/preview_course_nopop.php?catoid=40&coid=58569),[ISC-325](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=63732),[ISC-250](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=64649),[ISC-329](http://catalog.oswego.edu/preview_course_nopop.php?catoid=42&coid=63733)), I built a multi-tier web application to analyze and present baseball players salaries from 1985 to 2016. How they change overtime which people should be able to see by clicking on the use case and clicking the word graph to show the line graph for that year.
 ## Tech Stack
 1. Javascript
 2. Node.js
@@ -15,11 +15,11 @@ My capstone project is about analyzing baseball salaries from 1985 to 2016. Data
 ![architecture](screenShots/architecture.png)
 Request starts in the browser and is sent to the server as where the response is sent from the server to the browser.
 I used the http GET method for all of my routes.
-I have two routes for each use case one for  the data table and one for graph
+I have two routes for each use case one for the data table and one for graph
 
 For example the average team salaries route first runs the query to get all the years from mySQL for which we have data (line 59 in routes.js) then it runs another query to get the total and average payroll for each team. (Which is in line 63)
 
-The res.render in line 66 renders averageTeamSalariesPerYear pug file which is the HTML template.
+The `res.render` in line 66 renders averageTeamSalariesPerYear pug file which is the HTML template.
 
 The pug files create the HTML that is displayed in the browser. They use the data provided by the route. For example line 66 provides for pieces of data to the template.
 
@@ -34,10 +34,10 @@ Line 18 gives us the button for the graph
 ### Set up node.js javascript server
 1. Downloaded installer for node.js and ran it
 2. Went into vs code and opened a terminal
-3. Initialized the node environment with npm init
-4. Installed express js with npm install express. This is the web server
-5. Installed mysql2 with npm install mysql2. This is the connector for mySQL
-6. Installed pug with npm install pug. This is in HTML template generator.
+3. Initialized the node environment with `npm init`
+4. Installed express js with `npm install express`. This is the web server
+5. Installed mysql2 with `npm install mysql2`. This is the connector for mySQL
+6. Installed pug with `npm install pug`. This is in HTML template generator.
 
 
 ## Steps for completing capstone project
