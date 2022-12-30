@@ -1,16 +1,25 @@
+// the require keyword is built in node.js which tells node which packages it wants to use. 
+// Express is a back end web application framework with Node.js
 const express = require('express')
+//Express body-parser is used to process data sent in an HTTP request body
 const bodyParser = require('body-parser')
+//Routing refers to how an application responds to client request for an endpoint
 const router = express.Router()
+// node needs to communicate with the mysql database
 const mysql = require('mysql2/promise')
+// file system package is needed to serve web assets(files ex:css,img)
 const fs = require('fs')
-const { Router } = require('express')
+// node requires the pug module for compiling HTML templates 
 const { compile } = require('pug')
-
+//router must use bodyParser to encode and decode the request
 router.use(bodyParser.urlencoded({
     extended: true
 }));
-router.use(bodyParser.json());
+
+// declared a function to get an SQL connection
+// async is required by javascript because of the await
 async function getMySQLConnection() {
+  // I am calling mysql to get a connection and must wait to establish the  connection
     const connection = await mysql.createConnection({
         host: 'localhost',
         user: 'baseball',
@@ -26,7 +35,10 @@ router.use((req, res, next) => {
 })
 
 router.get('/', (req, res) => {
-    res.status(200).send('Welcome to Baseball Salaries').end()
+    res.status(200).send('Welcome to Baseball Salaries.').end()
+})
+router.get('/charles', (req, res) =>{
+  res.status(200).send("hi Charles").end()
 })
 router.get('/averageTeamSalariesPerYear', (req, res) => {
     let yearID
