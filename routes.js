@@ -20,21 +20,32 @@ router.use(bodyParser.urlencoded({
 // async is required by javascript because of the await
 async function getMySQLConnection() {
   // I am calling mysql to get a connection and must wait to establish the  connection
-    const connection = await mysql.createConnection({
+   //localhost uses IP address 127.0.0.1
+   // lines 25 through 30 json
+    const connection = await mysql.createConnection(
+      {
         host: 'localhost',
         user: 'baseball',
         password: 'Test',
         database: 'baselmlk_baseball'
-    })
+      }
+    )
     return connection
 }
-
+// router.use means when the router is used invoke this function
+//Router is used whenever the client requests an endpoint
+//next is used to invoke the next function defined to the router
+// This will be the requested endpoint
+//=> defines a arrow function
+//req.query provides access to query parameters in the url in JSON 
 router.use((req, res, next) => {
-    // console.log('Hello from router')
+    console.log('Hello from router',req.path,req.query)
     next()
 })
-
+// A put is a http method to store or process data from the client. I don't need a put because this application doesn't process client data
+// get is the http method to retrieve a specified resource which is specified in '/'
 router.get('/', (req, res) => {
+  // http response code 200 means resource was successful found
     res.status(200).send('Welcome to Baseball Salaries.').end()
 })
 router.get('/charles', (req, res) =>{
