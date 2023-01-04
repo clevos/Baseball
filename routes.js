@@ -51,22 +51,38 @@ router.get('/', (req, res) => {
 router.get('/charles', (req, res) =>{
   res.status(200).send("hi Charles").end()
 })
+//It sets up an endpoint using the http get method
+// An arrow function (=>) is a block of code that is executed when the user requests something from the server
 router.get('/averageTeamSalariesPerYear', (req, res) => {
     let yearID
+    //This endpoint requires the yearID for its query
+    // This if statement is true when the yearID query parameter is present in the request
+    // yearID is attribute and req.query is the object 
     if (req.query['yearID']) {
+      // get the yearID attribute and store it in the yearID variable
         yearID = req.query['yearID']
-    };
+    }
+    // Determines which column to sort by
+    // By default sort by teamID
     let sortColumn='teamID'
+    // sortColumn is the attribute and req.query is object
     if(req.query['sortColumn']){
         sortColumn=req.query['sortColumn']
     }
+    // Determines the sort order
+    // By default sort in ascending
     let sortOrder ='asc'
+    // sortColumn is the attribute and req.query is the object
     if(req.query['sortOrder']){
         sortOrder =req.query['sortOrder']
     }
+    // async is used here because I have to wait for the database connection
     (async () => {
+      // Defining a connection and waitng for the database connection
         const connection = await getMySQLConnection()
+        // try block deals with code that may fail
         try {
+          //All database commands will occur within a transaction
             await connection.beginTransaction()
             let results = await connection.query('Select distinct yearID From payroll order By yearID')
             const years = results[0]
@@ -81,6 +97,7 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
                 "salaries": salaries,
                 "sortOrder": sortOrder
             })
+            //catch deals with the error that may or may not hae occured
         } catch (error) {
             console.log(error)
             res.status(500).json({
