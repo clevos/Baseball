@@ -84,20 +84,31 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
         try {
           //All database commands will occur within a transaction
             await connection.beginTransaction()
+            // Get list of all avaiable years to the variable results
             let results = await connection.query('Select distinct yearID From payroll order By yearID')
+            // Defining variable years and bind it to the first position in the results array
             const years = results[0]
             let salaries
+            //If the yearID exist AND the yearID >0
+            //&& combines two boolean expressions
+            //+ converts yearID to a number data type
             if (yearID && +yearID > 0) {
+              //get the teamID and total salary, average salary from mySQL 
                 results = await connection.query(`Select teamID, cast(sum(salary) as double) as total_sal, cast(avg(salary) as double) as avg_sal From payroll Where yearID = ${yearID} group by teamID order by ${sortColumn} ${sortOrder}`)
+               // taking the results first and binding it to salaries variable
                 salaries = results[0]
             }
-            res.render('averageTeamSalariesPerYear', {
+            // Prepare response for the user
+            // Provide data from the database in the response in JSON
+            //Response renders HTML using the pug file and JSON data
+            res.render('averageTeamSalariesPerYear', {  
                 "yearID": yearID,
                 "years": years,
                 "salaries": salaries,
                 "sortOrder": sortOrder
             })
             //catch deals with the error that may or may not hae occured
+            // Cannot have a catch without a try
         } catch (error) {
             console.log(error)
             res.status(500).json({
