@@ -109,15 +109,22 @@ router.get('/averageTeamSalariesPerYear', (req, res) => {
             })
             //catch deals with the error that may or may not hae occured
             // Cannot have a catch without a try
+            //error is a json object containing details about the error
         } catch (error) {
+        // console.log shows up in the terminal in node
             console.log(error)
+            // We use the response object and we send the 500 to the client which is Internal Server Error
+            //Internal Server Error means no additional information to send. Additional details are logged to the terminal
             res.status(500).json({
                 "statuscode": 500,
                 "message": "error occurred"
             })
+            //finally is a block of code that is guaranteed to run after the try catch
         } finally {
+          // closes connection to the database 
             connection.end();
         }
+        //Final javascript catch for any error that occurs
     })().catch(err => console.error(err.stack))
 })
 

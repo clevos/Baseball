@@ -74,3 +74,9 @@ Line 18 gives us the button for the graph
 ![salaries](screenShots/salaries.png)
  ### After that you as the user has the ability to click on the graph button to show the data as a line graph.
 ![graph](screenShots/graph.png)
+
+## General steps I followed for each endpoint
+1. Defined an http get method on the on the Express JS router
+2. Named the endpoint and provided an arrow function
+3. Get required data for the endpoint from the request object. For example I get the yearID from the request query parameters
+4. Using the data provided in the request object, I run queries against mysql database
