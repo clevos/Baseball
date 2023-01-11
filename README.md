@@ -80,3 +80,10 @@ Line 18 gives us the button for the graph
 2. Named the endpoint and provided an arrow function
 3. Get required data for the endpoint from the request object. For example I get the yearID from the request query parameters
 4. Using the data provided in the request object, I run queries against mysql database
+  a. Get the connection to mySQL
+  b. In a try block start a database transaction 
+  c. Run a database query, sometimes providing parameterized values like(playerID), getting back data from mySQL. 
+  d. Depending on the endpoint, there maybe multiple queries to run.
+
+5. Using the retrieved data, I used the Express js response object to render the HTML file from the pug file.
+6. Deal with any error in the catch block
