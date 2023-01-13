@@ -1,31 +1,44 @@
 html
 	head
 		title='Average Team Salaries Per Year'
+		<!-- References the stylesheet -->
 		style
 			include ../public/baseballSalaries.css
+			<!-- Reference the client javascript file -->
 		script.
 			var sortOrder ='!{sortOrder}'
 		script(src="./code.js")
 	body
 		h1='Average Team Salaries Per Year'
 
+	<!-- Building dropdown of available years -->
+	<!-- Onchange means when the user selects a year from the dropdown the server generates the teams and there salaries for that year -->
 	select(id="yearID" onchange="window.location.href='/averageTeamSalariesPerYear?yearID='+this.value")
+		<!-- option is every value in the dropdown-->
 		option(value=0) # Select a Year
+		<!-- Generates an option for every year returned from node -->
 		each year in years
 			option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
-
+	<!-- Ask if salaries is not equal to null -->
 	if salaries
+		<!-- putting a button on the page  -->
 		button(onclick="window.location.href='/graphAverageTeamSalariesPerYear?yearID='+document.getElementById('yearID').value") Graph 
+		<!-- table tag becomes a table so on and forth-->
 		table 
 			thead 
 				tr 
+					<!-- a tag makes the link clickable -->
 					th <a onclick="sortData('/averageTeamSalariesPerYear', 'teamID')">Team ID</a> 
 					th <a onclick="sortData('/averageTeamSalariesPerYear','total_sal')">Total PayRoll</a> 
 					th <a onclick="sortData('/averageTeamSalariesPerYear','avg_sal')">Average Salary</a>
 			tbody 
+				<!-- Generate a row for every team salary in the json object -->
 				each salary in salaries 
-					tr 
+					tr
+						<!-- td is a column it's for salary.teamID, which means access the teamID attribute from the salary object--> 
 						td #{salary.teamID}
+						<!-- td is a column it's for salary.total_sal, which means access to the total salary attribute from the salary object-->
 						td(align="right") #{salary.total_sal.toLocaleString('en-US',{style: 'currency',currency: 'USD'})}
+						<!-- td is a column it's for average salary which means access to the teams average salary attribute from the salary object-->
 						td(align="right") #{salary.avg_sal.toLocaleString('en-US' ,{style: 'currency' ,currency: 'USD'})}
 						
