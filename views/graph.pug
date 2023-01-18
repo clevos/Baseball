@@ -2,7 +2,16 @@ html
 	head 
 		style 
 			include ../public/baseballSalaries.css
+		<!-- Chart js is a javascript framework that allows me to create a graph-->
 		script(src="https://cdn.jsdelivr.net/npm/chart.js")
+		<!-- script. means to put javascript directly into the file-->
+		<!-- gives labels to graph-->
+			<!-- Each dataset results in a single line on the chart-->
+			<!-- Datasets is an array of json objects-->
+			<!-- The first json object is the first dataset-->
+			<!-- Each dataset requires a label for the title and the data for the line-->
+			<!-- labels, data ex. come from the endpoint in routes js-->
+			<!-- The config object provides details about the chart type to chart js-->
 		script.
 			const data = {
 				labels: [!{'"' + labels.join('","') + '"'}],
@@ -28,7 +37,8 @@ html
 					config
 				)
 			}
-
+<!-- calling createGraph function when the body of the page is loaded-->
+<!-- canvas is used to draw graphics with javascript in HTML-->
 	body(onload="createGraph()")
 		div(style="width: 800px; height: 270px;")
 			canvas(id="myChart")
