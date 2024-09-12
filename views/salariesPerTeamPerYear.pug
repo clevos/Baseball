@@ -3,30 +3,30 @@ html
 		title='Salaries Per Team Per Year'
 		script.
 			var sortOrder ='!{sortOrder}'
-		script(src="../code.js")
+		script(src="./code.js")
 		style 
 			include ../public/baseballSalaries.css
 	body 
 		h1='Salaries Per Team Per Year'
 
-	select(id="yearID" onchange=`window.location.href='/salariesPerTeamPerYear?teamID=${teamID}&yearID='+this.value`)
+	select(id="yearID" onchange=`window.location.href='salariesPerTeamPerYear?teamID=${teamID}&yearID='+this.value`)
 		option(value=0) # Select a Year
 		each year in years
 			option(value=year.yearID selected=(year.yearID==yearID)) #{year.yearID}
 
 	if teams
-		select(id="teamID" onchange=`window.location.href='/salariesPerTeamPerYear?yearID=${yearID}&teamID='+this.value`)
+		select(id="teamID" onchange=`window.location.href='salariesPerTeamPerYear?yearID=${yearID}&teamID='+this.value`)
 			option(value=none) # Select a Team
 			each team in teams
 				option(value=team.teamID selected=(team.teamID==teamID)) #{team.teamID}
 	
 	if salaries
-		button(onclick="window.location.href='/graphSalariesPerTeamPerYear?yearID='+document.getElementById('yearID').value+'&teamID='+document.getElementById('teamID').value") Graph  
+		button(onclick="window.location.href='graphSalariesPerTeamPerYear?yearID='+document.getElementById('yearID').value+'&teamID='+document.getElementById('teamID').value") Graph  
 		table 
 			thead 
-				th <a onclick="sortData('/salariesPerTeamPerYear', 'fname')">First Name</a>
-				th <a onclick="sortData('/salariesPerTeamPerYear','lname')">Last Name</a> 
-				th <a onclick="sortData('/salariesPerTeamPerYear','salary')">Salary</a> 
+				th <a onclick="sortData('salariesPerTeamPerYear', 'fname')">First Name</a>
+				th <a onclick="sortData('salariesPerTeamPerYear','lname')">Last Name</a> 
+				th <a onclick="sortData('salariesPerTeamPerYear','salary')">Salary</a> 
 			tbody 
 				each salary in salaries 
 					tr 

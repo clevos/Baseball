@@ -16,25 +16,25 @@ html
 		h1='Players Salary Over Time'
 
 	label year:
-		select(id="yearID" onchange="clearTable(); window.location.href='/playerSalaryOverTime?yearID='+this.value")
+		select(id="yearID" onchange="clearTable(); window.location.href='playerSalaryOverTime?yearID='+this.value")
 			option(value=0) # Select a Year
 			each year in years
 				option(value=year.yearID selected=(year.yearID == yearID)) #{year.yearID}
 
 		if yearID
-			select(id="playerID" onchange=`clearTable(); window.location.href='/playerSalaryOverTime?yearID=${yearID}&playerID='+this.value`)
+			select(id="playerID" onchange=`clearTable(); window.location.href='playerSalaryOverTime?yearID=${yearID}&playerID='+this.value`)
 				option(value=0) # Select a Player
 				each player in players
 					option(value=player.playerID selected=(player.playerID == playerID)) #{player.nameFirst} #{player.nameLast}
 
 		if salaries && salaries.length > 0
-			button(onclick="window.location.href='/graphPlayerSalaryOverTime?playerID='+document.getElementById('playerID').value") Graph 
+			button(onclick="window.location.href='graphPlayerSalaryOverTime?playerID='+document.getElementById('playerID').value") Graph 
 			table 
 				thead 
 					tr 
-						th <a onclick="sortData('/playerSalaryOverTime', 'teamID')">Team ID</a> 
-						th <a onclick="sortData('/playerSalaryOverTime', 'yearID')">year ID</a>
-						th <a onclick="sortData('/playerSalaryOverTime','salary')">Salary</a>
+						th <a onclick="sortData('playerSalaryOverTime', 'teamID')">Team ID</a> 
+						th <a onclick="sortData('playerSalaryOverTime', 'yearID')">year ID</a>
+						th <a onclick="sortData('playerSalaryOverTime','salary')">Salary</a>
 				tbody 
 					each salary in salaries
 						tr

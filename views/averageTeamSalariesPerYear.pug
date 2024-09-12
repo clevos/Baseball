@@ -13,7 +13,7 @@ html
 
 	<!-- Building dropdown of available years -->
 	<!-- Onchange means when the user selects a year from the dropdown the server generates the teams and there salaries for that year -->
-	select(id="yearID" onchange="window.location.href='/averageTeamSalariesPerYear?yearID='+this.value")
+	select(id="yearID" onchange="window.location.href='averageTeamSalariesPerYear?yearID='+this.value")
 		<!-- option is every value in the dropdown-->
 		option(value=0) # Select a Year
 		<!-- Generates an option for every year returned from node -->
@@ -22,15 +22,15 @@ html
 	<!-- Ask if salaries is not equal to null -->
 	if salaries
 		<!-- putting a button on the page  -->
-		button(onclick="window.location.href='/graphAverageTeamSalariesPerYear?yearID='+document.getElementById('yearID').value") Graph 
+		button(onclick="window.location.href='graphAverageTeamSalariesPerYear?yearID='+document.getElementById('yearID').value") Graph 
 		<!-- table tag becomes a table so on and forth-->
 		table 
 			thead 
 				tr 
 					<!-- a tag makes the link clickable -->
-					th <a onclick="sortData('/averageTeamSalariesPerYear', 'teamID')">Team ID</a> 
-					th <a onclick="sortData('/averageTeamSalariesPerYear','total_sal')">Total PayRoll</a> 
-					th <a onclick="sortData('/averageTeamSalariesPerYear','avg_sal')">Average Salary</a>
+					th <a onclick="sortData('averageTeamSalariesPerYear', 'teamID')">Team ID</a> 
+					th <a onclick="sortData('averageTeamSalariesPerYear','total_sal')">Total PayRoll</a> 
+					th <a onclick="sortData('averageTeamSalariesPerYear','avg_sal')">Average Salary</a>
 			tbody 
 				<!-- Generate a row for every team salary in the json object -->
 				each salary in salaries 

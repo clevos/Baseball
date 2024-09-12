@@ -11,24 +11,24 @@ html
 					document.getElementById('data').innerHTML=""
 				}
 			}
-		script(src="../code.js")
+		script(src="./code.js")
 	body 
 		h1= 'Highest Paid Players Per Team Per Year'
 
-	select(id="yearID" onchange="pagereset(); window.location.href='/highestPaidPlayersPerTeamPerYear?yearID='+this.value")
+	select(id="yearID" onchange="pagereset(); window.location.href='highestPaidPlayersPerTeamPerYear?yearID='+this.value")
 		option(value=0) # Select year 
 		each year in years 
 			option(value=year.yearID selected=(year.yearID==yearID)) #{year.yearID}
 	
 	if salaries
-		button(onclick="window.location.href='/graphHighestPaidPlayersPerTeamPerYear?yearID='+document.getElementById('yearID').value") Graph  
+		button(onclick="window.location.href='graphHighestPaidPlayersPerTeamPerYear?yearID='+document.getElementById('yearID').value") Graph  
 		table(id="data")
 			thead 
 				tr 
-					th <a onclick="pagereset(); sortData('/highestPaidPlayersPerTeamPerYear', 'teamID')">Team ID</a>
-					th <a onclick="pagereset(); sortData('/highestPaidPlayersPerTeamPerYear', 'fname')">First name</a> 
-					th <a onclick="pagereset(); sortData('/highestPaidPlayersPerTeamPerYear', 'lname')">Last name</a> 
-					th <a onclick="pagereset(); sortData('/highestPaidPlayersPerTeamPerYear','salary')">Salary</a> 
+					th <a onclick="pagereset(); sortData('highestPaidPlayersPerTeamPerYear', 'teamID')">Team ID</a>
+					th <a onclick="pagereset(); sortData('highestPaidPlayersPerTeamPerYear', 'fname')">First name</a> 
+					th <a onclick="pagereset(); sortData('highestPaidPlayersPerTeamPerYear', 'lname')">Last name</a> 
+					th <a onclick="pagereset(); sortData('highestPaidPlayersPerTeamPerYear','salary')">Salary</a> 
 			tbody
 				each salary in salaries 
 					tr 
